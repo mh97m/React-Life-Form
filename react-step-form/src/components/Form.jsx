@@ -1,30 +1,30 @@
 import React, { useState } from "react";
-import SignUpInfo from "./SignUpInfo";
+import JobInfo from "./JobInfo";
 import PersonalInfo from "./PersonalInfo";
-import OtherInfo from "./OtherInfo";
+import InsuranceInfo from "./InsuranceInfo";
 
 function Form() {
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    firstName: "",
-    lastName: "",
-    username: "",
-    nationality: "",
-    other: "",
+    insurance_target: "",
+    birth_year: "",
+    birth_month: "",
+    birth_day: "",
+    job: "",
+    life_ins_duration: "",
+    payment_method: "",
+    annual_payment: "",
   });
 
-  const FormTitles = ["Sign Up", "Personal Info", "Other"];
+  const FormTitles = ["اطلاعات شخصی", "شغل", "اطلاعات تکمیلی"];
 
   const PageDisplay = () => {
     if (page === 0) {
-      return <SignUpInfo formData={formData} setFormData={setFormData} />;
-    } else if (page === 1) {
       return <PersonalInfo formData={formData} setFormData={setFormData} />;
+    } else if (page === 1) {
+      return <JobInfo formData={formData} setFormData={setFormData} />;
     } else {
-      return <OtherInfo formData={formData} setFormData={setFormData} />;
+      return <InsuranceInfo formData={formData} setFormData={setFormData} />;
     }
   };
 
@@ -43,11 +43,12 @@ function Form() {
         <div className="footer">
           <button
             disabled={page == 0}
+            style={{ display: page === 0 ? "none" : "block" }}
             onClick={() => {
               setPage((currPage) => currPage - 1);
             }}
           >
-            Prev
+            قبلی
           </button>
           <button
             onClick={() => {
@@ -59,7 +60,7 @@ function Form() {
               }
             }}
           >
-            {page === FormTitles.length - 1 ? "Submit" : "Next"}
+            {page === FormTitles.length - 1 ? "ثبت اطلاعات" : "بعدی"}
           </button>
         </div>
       </div>
