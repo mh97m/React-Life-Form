@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Jobs from "../Jobs.json";
+import Jobs from "../../Jobs.json";
 
 function JobInfo({ formData, setFormData }) {
   const [results, setResults] = useState([]);

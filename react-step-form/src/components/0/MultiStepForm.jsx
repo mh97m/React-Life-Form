@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import JobInfo from "./JobInfo";
 import PersonalInfo from "./PersonalInfo";
 import InsuranceInfo from "./InsuranceInfo";
+import axios from "axios";
+import Cookies from 'universal-cookie';
+import "./MultiStepForm.css";
 
-function Form() {
+function MultiStepForm() {
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState({
     insurance_target: "",
@@ -40,22 +43,44 @@ function Form() {
     }
   };
 
+  const fetchData = async () => {
+    await axios.post('/lifeCompare', formData)
+      .then(function (response) {
+        console.log(response, true);
+        // if (response.data.redirect == '/') {
+        //   window.location = "/index"
+        // } else if (response.data.redirect == '/login') {
+        //   window.location = "/login"
+        // }
+      })
+      .catch(function (error) {
+        window.location = "/lifeCompare"
+        console.log(error, false);
+      });
+  };
+
   const handleSubmit = () => {
     if (formData['insurance_target'] && formData['birth_year'] && formData['birth_month'] && formData['birth_day']
       && formData['job_id']
       && formData['life_ins_duration'] && formData['payment_method'] && formData['annual_payment']) {
-        formData['annual_payment'] = formData['annual_payment'].replace(/,/g,'');
-        if (formData['payment_method'] == 12) {
-          if (formData['annual_payment'] >= 6000000) {
-            alert("FORM SUBMITTED");
-            console.log(formData);
-          }
-        } else {
-          if (formData['annual_payment'] >= 4000000) {
-            alert("FORM SUBMITTED");
-            console.log(formData);
-          }
+      formData['annual_payment'] = formData['annual_payment'].replace(/,/g, '');
+      if (formData['payment_method'] == 12) {
+        if (formData['annual_payment'] >= 6000000) {
+          alert("FORM SUBMITTED");
+          // console.log(formData);
+          // fetchData();
+          const cookies = new Cookies();
+          cookies.set('formData', formData, { path: '/lifeCompare' });
+          window.location = "/lifeCompare";
+          // console.log(cookies.get('formData'));
         }
+      } else {
+        if (formData['annual_payment'] >= 4000000) {
+          alert("FORM SUBMITTED");
+          // console.log(formData);
+          // fetchData();
+        }
+      }
     }
   };
 
@@ -64,7 +89,7 @@ function Form() {
       if (formData['insurance_target'] && formData['birth_year'] && formData['birth_month'] && formData['birth_day']) {
         setPage((page) => page + 1);
       }
-    } else if(page == 1){
+    } else if (page == 1) {
       if (formData['job_id']) {
         setPage((page) => page + 1);
       }
@@ -110,4 +135,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default MultiStepForm;

@@ -25,7 +25,7 @@ function InsuranceInfo({ formData, setFormData }) {
   }
 
   const handleannualPayment = (e) => {
-    setFormData({ ...formData, [e.target.name]: parseInt(e.target.value.replace(/,/g,'')) ? parseInt(e.target.value.replace(/,/g,'')).toLocaleString() : 0 });
+    setFormData({ ...formData, [e.target.name]: parseInt(e.target.value.replace(/,/g, '')) ? parseInt(e.target.value.replace(/,/g, '')).toLocaleString() : 0 });
   }
 
   return (
