@@ -12,7 +12,11 @@ function JobInfo({ formData, setFormData }) {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+      job_id: 0
+    });
     search(e);
   }
 
@@ -25,15 +29,24 @@ function JobInfo({ formData, setFormData }) {
         value={formData.job}
         onChange={handleChange}
       />
-        {
-          results.results?.map((item) => {
+      {
+        results.results?.map((item, index) => {
+          if (index < 5) {
             return (
-              <span onClick={(e) => {
-                setFormData({ ...formData, job: e.target.innerHTML });
-              }}>{item.Caption}</span>
+              <span
+                onClick={(e) => {
+                  setFormData({
+                    ...formData,
+                    job_id: (item.Id).toString(),
+                    job: e.target.innerHTML
+                  });
+                }}
+                key={index}
+                className="job">{item.Caption}</span>
             )
-          })
-        }
+          }
+        })
+      }
     </div>
   );
 }
