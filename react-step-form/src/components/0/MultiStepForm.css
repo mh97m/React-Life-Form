@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-.App {
+.MultiStepForm {
   background: rgb(255, 0, 228);
   background: radial-gradient(
     circle,
@@ -20,7 +20,7 @@ body {
   font-family: montserrat, arial, verdana;
 }
 
-.form {
+.step-form {
   width: 100%;
   height: 100%;
   display: flex;
@@ -70,7 +70,7 @@ body {
   margin: 5px;
 }
 
-label{
+.step-form-label{
   display: flex;
   justify-content: right;
   font-size: 20px;
@@ -223,7 +223,7 @@ select:focus {
   border: 3px solid rgb(98, 0, 255);
 }
 
-.job {
+.job-offer {
   border: 2px solid rgb(17, 0, 255);
   background-color: rgba(38, 0, 255, 0.151);
   border-radius: 5px;
