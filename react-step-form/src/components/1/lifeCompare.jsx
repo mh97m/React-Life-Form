@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
-import "./lifeCompare.css";
 import FormInput from "./FormInput";
 import Cookies from "universal-cookie";
 import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import "./lifeCompare.css";
 
 function LifeCompare() {
     const cookies = new Cookies();
     const formData = cookies.get("formData");
     const [values, setValues] = useState({
         insurance_target: formData["insurance_target"],
-        insurance_target_error: "",
         birth_year: formData["birth_year"],
-        birth_year_error: "",
         birth_month: formData["birth_month"],
         birth_day: formData["birth_day"],
         password: "",
@@ -64,25 +62,31 @@ function LifeCompare() {
             id: 2,
             name: "birth_year",
             type: "select",
-            // errorMessage: ". سن شما بیشتر از 64 سال است",
+            errorMessage: ".سال تولد خود را وارد کنید!!",
             label: "سال تولد",
+            required: true,
             options: years,
         },
         {
             id: 3,
             name: "birth_month",
             type: "select",
+            errorMessage: ".ماه تولد خود را وارد کنید!!",
             label: "ماه تولد",
+            required: true,
             options: months,
         },
         {
             id: 4,
             name: "birth_day",
             type: "select",
+            errorMessage: ".روز تولد خود را وارد کنید!!",
             label: "روز تولد",
+            required: true,
             options: days,
         },
-        {
+        /*
+        ,{
             id: 44,
             name: "password",
             type: "password",
@@ -103,17 +107,16 @@ function LifeCompare() {
             pattern: values.password,
             required: true,
         },
+        */
     ];
 
-    // const makeHandle = (str) =>
-    //     ('handle_'+ str)
-    //         .toLowerCase()
-    //         .replace(/([-_][a-z])/g, (group) =>
-    //             group.toUpperCase().replace("-", "").replace("_", "")
-    //         );
+    const onChange = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
+        handleChange(e);
+    };
 
-    const handleChange = (e, name) => {
-        switch (name) {
+    const handleChange = (e) => {
+        switch (e.target.name) {
             case "insurance_target":
                 handleInsuranceTarget(e);
                 break;
@@ -132,11 +135,25 @@ function LifeCompare() {
     const updateAge = (e) => {
         setAge(
             now.year -
-            values["birth_year"] -
-            (now.month > values["birth_month"] ? 1 : 0) -
-            (now.month == values["birth_month"] && now.day > values["birth_day"]
-                ? 1
-                : 0)
+                (e.target.name == "birth_year"
+                    ? e.target.value
+                    : values["birth_year"]) -
+                (now.month >
+                (e.target.name == "birth_month"
+                    ? e.target.value
+                    : values["birth_month"])
+                    ? 1
+                    : 0) -
+                (now.month ==
+                    (e.target.name == "birth_month"
+                        ? e.target.value
+                        : values["birth_month"]) &&
+                now.day >
+                    (e.target.name == "birth_day"
+                        ? e.target.value
+                        : values["birth_day"])
+                    ? 1
+                    : 0)
         );
     };
 
@@ -155,24 +172,26 @@ function LifeCompare() {
     };
 
     const handleBirthYear = (e) => {
-        setAge(
-            now.year -
-            e.target.value -
-            (now.month > values["birth_month"] ? 1 : 0) -
-            (now.month == values["birth_month"] && now.day > values["birth_day"]
-                ? 1
-                : 0)
-        );
-        console.log(age);
         setErrors({ ...errors, birth_year: "" });
-        if (age >= 64) {
+        updateAge(e);
+        const new_age = age + parseInt(values["birth_year"]) - parseInt(e.target.value);
+
+        console.log(
+            // age,
+            // values["birth_year"],
+            // now.year,
+            // e.target.value,
+            new_age
+        );
+
+        if (new_age >= 64) {
             setValues({ ...values, birth_year: "" });
             setErrors({
                 ...errors,
                 birth_year:
                     ". حداکثر سن 64 سال است !!",
             });
-        } else if (age < 18) {
+        } else if (new_age < 18) {
             if (values["insurance_target"] == "خودم") {
                 setValues({ ...values, birth_year: "" });
                 setErrors({
@@ -182,11 +201,6 @@ function LifeCompare() {
                 });
             }
         }
-    };
-
-    const onChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
-        handleChange(e, e.target.name);
     };
 
     return (
