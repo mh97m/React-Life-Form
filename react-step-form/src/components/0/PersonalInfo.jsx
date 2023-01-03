@@ -121,11 +121,11 @@ function PersonalInfo({ formData, setFormData, formError, setFormError }) {
                 <option value="">نسبت</option>
                 <option value="خودم">خودم</option>
                 <option value="همسر">همسر</option>
+                <option value="فرزند">فرزند</option>
                 <option value="پدر">پدر</option>
                 <option value="مادر">مادر</option>
                 <option value="خواهر">خواهر</option>
                 <option value="برادر">برادر</option>
-                <option value="فرزند">فرزند</option>
             </select>
             <div className="birth">
                 <select

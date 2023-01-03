@@ -2,7 +2,17 @@ import { useState } from "react";
 import "./formInput.css";
 
 const FormInput = (props) => {
-    const { label, errorMessage, onChange, id, type, options, error, ...inputProps } = props;
+    const {
+        label,
+        errorMessage,
+        onChange,
+        onClick,
+        id,
+        type,
+        options,
+        error,
+        ...inputProps
+    } = props;
     const [focused, setFocused] = useState(false);
 
     const handleFocus = (e) => {
@@ -10,34 +20,39 @@ const FormInput = (props) => {
     };
 
     switch (type) {
-        case 'select':
+        case "select":
             return (
                 <div className="life-compare-form-select">
                     <label className="life-compare-label">{label}</label>
                     <select
                         {...inputProps}
-                        className={error ? "life-compare-select-error": "life-compare-select"}
+                        className={
+                            error
+                                ? "life-compare-select-error"
+                                : "life-compare-select"
+                        }
                         onChange={onChange}
                         onBlur={handleFocus}
-                        onFocus={() =>
-                            inputProps.name === "confirmPassword" && setFocused(true)
-                        }
                         focused={focused.toString()}
                     >
                         <option value="">{label}</option>
-                        {
-                            options.map((opt, index) => {
-                                return (
-                                    <option key={index} value={opt}>{opt}</option>
-                                )
-                            })
-                        }
+                        {options.map((opt, index) => {
+                            return typeof opt !== "object" ? (
+                                <option key={index} value={opt}>
+                                    {opt}
+                                </option>
+                            ) : (
+                                <option key={index} value={opt["key"]}>
+                                    {opt["value"]}
+                                </option>
+                            );
+                        })}
                     </select>
                     <span className="life-compare-span">{errorMessage}</span>
                     <span className="life-compare-span-error">{error}</span>
                 </div>
             );
-        break;
+            break;
         default:
             return (
                 <div className="life-compare-form-input">
@@ -48,17 +63,36 @@ const FormInput = (props) => {
                         onChange={onChange}
                         onBlur={handleFocus}
                         onFocus={() =>
-                            inputProps.name === "confirmPassword" && setFocused(true)
+                            inputProps.name === "confirmPassword" &&
+                            setFocused(true)
                         }
                         focused={focused.toString()}
                         type={type}
                     />
                     <span className="life-compare-span">{errorMessage}</span>
-                    <span className="life-compare-span">{errorMessage}</span>
+                    <span className="life-compare-span-error">{error}</span>
+                    {inputProps.name == "first_job_level" ? (
+                        <ul>
+                            {options?.map((item, index) => {
+                                if (index < 5) {
+                                    return (
+                                        <li
+                                            key={index}
+                                            className="ui-menu-item"
+                                            onClick={onClick}
+                                            value={item.Id}
+                                        >
+                                            {item.Caption}
+                                        </li>
+                                    );
+                                }
+                            })}
+                        </ul>
+                    ) : null}
                 </div>
             );
-        }
-    
+            break;
+    }
 };
 
 export default FormInput;

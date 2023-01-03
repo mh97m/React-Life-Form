@@ -90,16 +90,16 @@ function MultiStepForm() {
                     // console.log(formData);
                     // fetchData();
                     const cookies = new Cookies();
-                    cookies.set("formData", formData, { path: "/lifeCompare" });
-                    window.location = "/lifeCompare";
+                    cookies.set("formData", formData, { path: "/life-compare" });
+                    window.location = "/life-compare";
                     // console.log(cookies.get('formData'));
                 }
             } else {
                 if (formData["annual_payment"] >= 4000000) {
                     alert("FORM SUBMITTED");
                     const cookies = new Cookies();
-                    cookies.set("formData", formData, { path: "/lifeCompare" });
-                    window.location = "/lifeCompare";
+                    cookies.set("formData", formData, { path: "/life-compare" });
+                    window.location = "/life-compare";
                     // console.log(formData);
                     // fetchData();
                 }

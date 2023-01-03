@@ -50,18 +50,13 @@ input:invalid[focused="true"] ~ span{
     display: block;
 }
 
-/* select:invalid[focused="true"]{
+select:invalid[focused="true"]{
     border: 2px solid red;
 }
 
 select:invalid[focused="true"] ~ span{
     display: block;
-} */
-
-/* select {
-    border: 2px solid red;
-} */
-
+}
 
 .life-compare-form-select {
     display: flex;
@@ -91,4 +86,15 @@ select:invalid[focused="true"] ~ span{
     font-weight: 600;
     text-align: center;
     border: 2px solid red;
+}
+
+.ui-menu-item {
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 4px;
+    margin: 2px;
+    background-color: azure;
+    text-align: center;
 }

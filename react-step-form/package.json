@@ -1,10 +1,10 @@
 {
   "name": "step-form",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port=3000",
+    "dev": "vite --port=8080",
     "build": "vite build",
     "preview": "vite preview"
   },

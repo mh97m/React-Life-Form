@@ -13,7 +13,7 @@ function InsuranceInfo({ formData, setFormData }) {
     if (now.year - parseInt(formData["birth_year"]) >= 59) {
         for (
             let i = 0;
-            i < 64 - now.year + parseInt(formData["birth_year"]) + 1;
+            i < 65 - now.year + parseInt(formData["birth_year"]) + 1;
             i++
         ) {
             durations.push(i + 5);
