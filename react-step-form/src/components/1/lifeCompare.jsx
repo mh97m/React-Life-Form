@@ -5,7 +5,7 @@ import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import "./lifeCompare.css";
-import Jobs from "../../Jobs.json";
+// import Jobs from "../../Jobs.json";
 
 function LifeCompare() {
     const cookies = new Cookies();
@@ -85,6 +85,7 @@ function LifeCompare() {
     const [months, setMonths] = useState([]);
     const [days, setDays] = useState([]);
     const [durations, setDurations] = useState([]);
+    const [jobs, setJobs] = useState([]);
     const [jobResults, setJobResults] = useState([]);
     const [capitalIncreases, setCapitalIncreases] = useState([]);
     const [capitalIncidents, setCapitalIncidents] = useState([]);
@@ -95,6 +96,13 @@ function LifeCompare() {
         setDays([...Array(30).keys()].map((i) => 30 - i));
         updateDurations();
         updateCapitalIncidents();
+        const getjobs= async()=>{
+            const result= await fetch("http://127.0.0.1:8000/api/v1/get-jobs");
+            // const result = await axios.get("http://127.0.0.1:8000/api/v1/get-jobs");
+            const resultJobs= await result.json();
+            setJobs(await resultJobs);
+        };
+        getjobs();
     }, []);
 
     const inputs = [
@@ -744,8 +752,8 @@ function LifeCompare() {
         });
         setJobResults(
             e.target.value.length > 2
-                ? Jobs.filter((value) => {
-                      return value.Caption.toLowerCase().includes(
+                ? jobs.filter((value) => {
+                      return value.caption.toLowerCase().includes(
                           e.target.value.toLowerCase()
                       );
                   })

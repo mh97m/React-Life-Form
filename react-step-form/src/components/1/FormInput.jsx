@@ -85,7 +85,7 @@ const FormInput = (props) => {
                                             onClick={onClick}
                                             value={item.Id}
                                         >
-                                            {item.Caption}
+                                            {item.caption}
                                         </li>
                                     );
                                 }
