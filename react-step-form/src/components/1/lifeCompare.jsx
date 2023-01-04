@@ -771,6 +771,7 @@ function LifeCompare() {
                 has_medical_cost: "",
                 additional_dangers: "",
                 hospitalization: "",
+                death_capital_incident_ratio: "",
             });
         }
     };

@@ -9,7 +9,7 @@
 }
 
 .life-compare-form {
-    width: 80%;
+    width: 20%;
     height: 100%;
     background-color: white;
     padding: 0px 60px;
@@ -37,5 +37,25 @@
     margin-top: 15px;
     margin-bottom: 30px;
     margin-right: 10%;
-    margin-left: 10%;
+}
+
+
+.life-compare-nav {
+    display: flex;
+    width: 80%;
+    height: 50px;
+    padding: 10px;
+    border: none;
+    background-color: rgba(102, 51, 153, 0.457);
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    margin-right: 10%;
+    align-items: center;
+    justify-items: center;
 }

@@ -11,14 +11,13 @@ function App() {
     return (
         <FormContext.Provider value="">
             <Router>
-                <nav className="d-flex justify-contents-between">
+                <nav className="life-compare-nav">
                     <Link to="/" className="life-compare-button">
-                        first Page
+                        صفحه اول
                     </Link>
                     <Link to="/life-compare" className="life-compare-button">
-                        Second Page
+                        صفحه دوم
                     </Link>
-                    <hr className="border border-dark"></hr>
                 </nav>
                 <Routes>
                     <Route path="/" element={<MultiStepForm />} />
