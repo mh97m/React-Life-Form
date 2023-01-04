@@ -717,7 +717,10 @@ function LifeCompare() {
     };
 
     const handleFirstJobLevel = (e) => {
-        setValues({ ...values, first_job_level_id: "" });
+        setValues({ ...values,
+            first_job_level_id: "",
+            first_job_level: e.target.value,
+        });
         setJobResults(
             e.target.value.length > 2
                 ? Jobs.filter((value) => {
