@@ -598,8 +598,10 @@ function LifeCompare() {
                 ...values,
                 [e.target.name]: e.target.value,
                 divided_payment: parseInt(
-                    parseInt(values["annual_payment"].replace(/,/g, "")) /
-                        parseInt(e.target.value)
+                    e.target.value
+                        ? parseInt(values["annual_payment"].replace(/,/g, "")) /
+                              parseInt(e.target.value)
+                        : "0"
                 ).toLocaleString(),
             });
         }
@@ -665,7 +667,11 @@ function LifeCompare() {
                     ? values["annual_payment"].replace(/,/g, "")
                     : 0) < 6000000
             ) {
-                setValues({ ...values, annual_payment: "" });
+                setValues({
+                    ...values,
+                    annual_payment: "",
+                    divided_payment: "",
+                });
                 setErrors({
                     ...errors,
                     annual_payment:
@@ -680,7 +686,11 @@ function LifeCompare() {
                     ? values["annual_payment"].replace(/,/g, "")
                     : 0) < 4000000
             ) {
-                setValues({ ...values, annual_payment: "" });
+                setValues({
+                    ...values,
+                    annual_payment: "",
+                    divided_payment: "",
+                });
                 setErrors({
                     ...errors,
                     annual_payment: ". حداقل مبلغ 000'000'4 ریال می باشد !!",
@@ -695,8 +705,13 @@ function LifeCompare() {
         setErrors({ ...errors, [e.target.name]: "" });
         if (values["payment_method"] == "12") {
             if (e.target.value.replace(/,/g, "") < 6000000) {
-                // setValues({ ...values, payment_method: "" });
+                // setValues({
+                //     ...values,
+                //     payment_method: "",
+                //     divided_payment: "",
+                // });
                 values["payment_method"] = "";
+                values["divided_payment"] = "";
                 setErrors({
                     ...errors,
                     [e.target.name]:
@@ -705,8 +720,13 @@ function LifeCompare() {
             }
         } else {
             if (e.target.value.replace(/,/g, "") < 4000000) {
-                // setValues({ ...values, payment_method: "" });
+                // setValues({
+                //     ...values,
+                //     payment_method: "",
+                //     divided_payment: "",
+                // });
                 values["payment_method"] = "";
+                values["divided_payment"] = "";
                 setErrors({
                     ...errors,
                     [e.target.name]: ". حداقل مبلغ 000'000'4 ریال می باشد !!",
@@ -717,7 +737,8 @@ function LifeCompare() {
     };
 
     const handleFirstJobLevel = (e) => {
-        setValues({ ...values,
+        setValues({
+            ...values,
             first_job_level_id: "",
             first_job_level: e.target.value,
         });
