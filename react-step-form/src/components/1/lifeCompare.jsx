@@ -741,7 +741,7 @@ function LifeCompare() {
     const handleAnnualPaymentIncrease = (e) => {
         const array = [];
         if (e.target.value)
-            for (let i = 0; i <= e.target.value / 5; i++) {
+            for (let i = 0; i <= e.target.value / 5 && i < 5; i++) {
                 array.push({
                     key: i * 5,
                     value: (i * 5).toLocaleString() + " %",
