@@ -30,7 +30,12 @@ function LifeCompare() {
                 : "",
         first_job_level: typeof formData !== "undefined" ? formData["job"] : "",
         first_job_level_id: "",
-        divided_payment: typeof formData !== "undefined" ? (formData["annual_payment"] / formData["payment_method"]).toLocaleString() : "",
+        divided_payment:
+            typeof formData !== "undefined"
+                ? (
+                      formData["annual_payment"] / formData["payment_method"]
+                  ).toLocaleString()
+                : "",
     });
     const [errors, setErrors] = useState({
         insurance_target: "",
@@ -48,9 +53,14 @@ function LifeCompare() {
     );
     const age = useRef(
         now.year -
-            values["birth_year"] -
-            (now.month > values["birth_month"] ? 1 : 0) -
-            (now.month == values["birth_month"] && now.day > values["birth_day"]
+            (values["birth_year"] ? values["birth_year"] : now.yaer) -
+            (now.month >
+            (values["birth_month"] ? values["birth_month"] : now.month)
+                ? 1
+                : 0) -
+            (now.month ==
+                (values["birth_month"] ? values["birth_month"] : now.month) &&
+            now.day > (values["birth_day"] ? values["birth_day"] : now.day)
                 ? 1
                 : 0)
     );
@@ -133,23 +143,19 @@ function LifeCompare() {
             options: [
                 {
                     key: 1,
-                    value: "۱ قسط سالانه"
+                    value: "۱ قسط سالانه",
                 },
                 {
                     key: 2,
-                    value: "۲ قسط شش ماهه"
+                    value: "۲ قسط شش ماهه",
                 },
                 {
                     key: 4,
-                    value: "۴ قسط سه ماهه"
+                    value: "۴ قسط سه ماهه",
                 },
                 {
                     key: 12,
-                    value: "۱۲ قسط ماهانه"
-                },
-                {
-                    key: 1,
-                    value: "۱ قسط سالانه"
+                    value: "۱۲ قسط ماهانه",
                 },
             ],
         },
@@ -166,7 +172,7 @@ function LifeCompare() {
             name: "divided_payment",
             type: "input",
             label: "مبلغ پرداختی قسط اول",
-            readOnly:true
+            readOnly: true,
         },
         /*
         ,{
@@ -281,7 +287,37 @@ function LifeCompare() {
             ? setDurations(
                   [...Array(77 - age.current).keys()].map((i) => 5 + i)
               )
-            : setDurations([...Array(26).keys()].map((i) => 5 + i));
+            : age.current
+            ? setDurations([...Array(26).keys()].map((i) => 5 + i))
+            : [];
+    };
+
+    const updateDividedPayment = (e) => {
+        if (e.target.name == "annual_payment") {
+            setValues({
+                ...values,
+                [e.target.name]: parseInt(e.target.value.replace(/,/g, ""))
+                    ? parseInt(
+                          e.target.value.replace(/,/g, "")
+                      ).toLocaleString()
+                    : 0,
+                divided_payment: parseInt(
+                    values["payment_method"]
+                        ? parseInt(e.target.value.replace(/,/g, "")) /
+                              parseInt(values["payment_method"])
+                        : "0"
+                ).toLocaleString(),
+            });
+        } else {
+            setValues({
+                ...values,
+                [e.target.name]: e.target.value,
+                divided_payment: parseInt(
+                    parseInt(values["annual_payment"].replace(/,/g, "")) /
+                        parseInt(e.target.value)
+                ).toLocaleString(),
+            });
+        }
     };
 
     const handleInsuranceTarget = (e) => {
@@ -336,6 +372,8 @@ function LifeCompare() {
                     annual_payment:
                         ". برای پرداخت ماهانه مبلغ باید بیشتر از 000'000'6 ریال باشد !!",
                 });
+            } else {
+                updateDividedPayment(e);
             }
         } else {
             if (
@@ -348,6 +386,8 @@ function LifeCompare() {
                     ...errors,
                     annual_payment: ". حداقل مبلغ 000'000'4 ریال می باشد !!",
                 });
+            } else {
+                updateDividedPayment(e);
             }
         }
     };
@@ -374,12 +414,7 @@ function LifeCompare() {
                 });
             }
         }
-        setValues({
-            ...values,
-            [e.target.name]: parseInt(e.target.value.replace(/,/g, ""))
-                ? parseInt(e.target.value.replace(/,/g, "")).toLocaleString()
-                : 0,
-        });
+        updateDividedPayment(e);
     };
 
     const handleFirstJobLevel = (e) => {
@@ -396,9 +431,10 @@ function LifeCompare() {
     };
 
     const onClickJobResults = (e) => {
-        setValues({ ...values,
+        setValues({
+            ...values,
             first_job_level_id: e.target.value,
-            first_job_level: e.target.innerHTML
+            first_job_level: e.target.innerHTML,
         });
         setJobResults([]);
     };
