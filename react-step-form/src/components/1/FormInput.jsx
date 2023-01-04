@@ -11,6 +11,8 @@ const FormInput = (props) => {
         type,
         options,
         error,
+        defaultValue,
+        disabled,
         ...inputProps
     } = props;
     const [focused, setFocused] = useState(false);
@@ -34,8 +36,9 @@ const FormInput = (props) => {
                         onChange={onChange}
                         onBlur={handleFocus}
                         focused={focused.toString()}
+                        disabled={(typeof disabled == "boolean") && disabled}
                     >
-                        <option value="">{label}</option>
+                        <option value="">{defaultValue ? defaultValue : label}</option>
                         {options.map((opt, index) => {
                             return typeof opt !== "object" ? (
                                 <option key={index} value={opt}>

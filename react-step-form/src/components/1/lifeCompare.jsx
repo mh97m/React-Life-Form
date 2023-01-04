@@ -36,6 +36,17 @@ function LifeCompare() {
                       formData["annual_payment"] / formData["payment_method"]
                   ).toLocaleString()
                 : "",
+        annual_payment_increase: "",
+        addon_payment_method: "",
+        death_capital_any_reason_ratio: "",
+        capital_increase: "",
+        death_capital_incident_ratio: "",
+        maim_ratio: "",
+        has_medical_cost: "",
+        additional_dangers: "",
+        hospitalization: "",
+        exemption: "",
+        special_diseases_ratio: "",
     });
     const [errors, setErrors] = useState({
         insurance_target: "",
@@ -43,6 +54,12 @@ function LifeCompare() {
         birth_month: "",
         birth_day: "",
         annual_payment: "",
+    });
+    const [disableds, setDisableds] = useState({
+        maim_ratio: true,
+        has_medical_cost: true,
+        additional_dangers: true,
+        hospitalization: true,
     });
     const [now, setNow] = useState(
         new DateObject({
@@ -69,76 +86,79 @@ function LifeCompare() {
     const [days, setDays] = useState([]);
     const [durations, setDurations] = useState([]);
     const [jobResults, setJobResults] = useState([]);
+    const [capitalIncreases, setCapitalIncreases] = useState([]);
+    const [capitalIncidents, setCapitalIncidents] = useState([]);
 
     useEffect(() => {
         setYears([...Array(66).keys()].map((i) => now.year - i));
         setMonths([...Array(12).keys()].map((i) => 12 - i));
         setDays([...Array(30).keys()].map((i) => 30 - i));
         updateDurations();
+        updateCapitalIncidents();
     }, []);
 
     const inputs = [
         {
             id: 1,
-            name: "insurance_target",
             type: "select",
-            errorMessage: ". نسبت خود را وارد کنید!!",
             label: "نسبت",
+            name: "insurance_target",
+            errorMessage: ". نسبت خود را وارد کنید!!",
             required: true,
             options: ["خودم", "همسر", "فرزند", "پدر", "مادر", "خواهر", "برادر"],
         },
         {
             id: 2,
-            name: "birth_year",
             type: "select",
-            errorMessage: ". سال تولد خود را وارد کنید !!",
             label: "سال تولد",
+            name: "birth_year",
+            errorMessage: ". سال تولد خود را وارد کنید !!",
             required: true,
             options: years,
         },
         {
             id: 3,
-            name: "birth_month",
             type: "select",
-            errorMessage: ". ماه تولد خود را وارد کنید !!",
             label: "ماه تولد",
+            name: "birth_month",
+            errorMessage: ". ماه تولد خود را وارد کنید !!",
             required: true,
             options: months,
         },
         {
             id: 4,
-            name: "birth_day",
             type: "select",
-            errorMessage: ". روز تولد خود را وارد کنید !!",
             label: "روز تولد",
+            name: "birth_day",
+            errorMessage: ". روز تولد خود را وارد کنید !!",
             required: true,
             options: days,
         },
         {
             id: 5,
-            name: "life_ins_duration",
             type: "select",
-            errorMessage: ". مدت بیمه نامه را وارد کنید !!",
             label: "مدت بیمه نامه",
+            name: "life_ins_duration",
+            errorMessage: ". مدت بیمه نامه را وارد کنید !!",
             required: true,
             options: durations,
         },
         {
             id: 6,
-            name: "first_job_level",
             type: "input",
-            errorMessage: ". شغل خود را انتخاب کنید !!",
             label: "عنوان شغل",
+            name: "first_job_level",
             placeholder: "عنوان شغل",
+            errorMessage: ". شغل خود را انتخاب کنید !!",
             required: true,
             options: jobResults,
         },
         {
             id: 7,
-            name: "payment_method",
             type: "select",
-            errorMessage: ". ابتدا مبلغ پرداختی را انتخاب نمایید !!",
             label: "روش پرداخت",
+            name: "payment_method",
+            errorMessage: ". ابتدا مبلغ پرداختی را انتخاب نمایید !!",
             required: true,
             options: [
                 {
@@ -161,18 +181,274 @@ function LifeCompare() {
         },
         {
             id: 8,
-            name: "annual_payment",
             type: "input",
-            errorMessage: ". مبلغ پرداختی برای سال اول را وارد کنید !!",
             label: "مبلغ پرداختی سال اول",
+            name: "annual_payment",
+            placeholder: "مبلغ پرداختی به ریال",
+            errorMessage: ". مبلغ پرداختی برای سال اول را وارد کنید !!",
             required: true,
         },
         {
             id: 9,
-            name: "divided_payment",
             type: "input",
             label: "مبلغ پرداختی قسط اول",
+            name: "divided_payment",
             readOnly: true,
+        },
+        {
+            id: 10,
+            type: "select",
+            label: "افزایش سالانه حق بیمه",
+            name: "annual_payment_increase",
+            errorMessage: ". افزایش سالانه حق بیمه را انتخاب نمایید !!",
+            required: true,
+            options: [
+                {
+                    key: 0,
+                    value: "0 %",
+                },
+                {
+                    key: 10,
+                    value: "10 %",
+                },
+                {
+                    key: 15,
+                    value: "15 %",
+                },
+                {
+                    key: 20,
+                    value: "20 %",
+                },
+                {
+                    key: 25,
+                    value: "25 %",
+                },
+            ],
+        },
+        {
+            id: 11,
+            type: "select",
+            label: "نحوه پرداخت حق بیمه پوشش های اضافی",
+            name: "addon_payment_method",
+            defaultValue: "نحوه پرداخت",
+            errorMessage:
+                ". نحوه پرداخت حق بیمه پوشش های اضافی را انتخاب نمایید !!",
+            required: true,
+            options: [
+                {
+                    key: 0,
+                    value: "جداگانه پرداخت میکنم",
+                },
+                {
+                    key: 1,
+                    value: "از حق بیمه سالیانه کسر گردد",
+                },
+            ],
+        },
+        {
+            id: 12,
+            type: "select",
+            label: "سرمایه فوت به هر علت",
+            name: "death_capital_any_reason_ratio",
+            defaultValue: "سرمایه فوت",
+            errorMessage: ". سرمایه فوت را انتخاب نمایید !!",
+            required: true,
+            options: [
+                {
+                    key: 1,
+                    value: "1 برابر سرمایه فوت",
+                },
+                {
+                    key: 2,
+                    value: "2 برابر سرمایه فوت",
+                },
+                {
+                    key: 3,
+                    value: "3 برابر سرمایه فوت",
+                },
+                {
+                    key: 4,
+                    value: "4 برابر سرمایه فوت",
+                },
+                {
+                    key: 5,
+                    value: "5 برابر سرمایه فوت",
+                },
+                {
+                    key: 6,
+                    value: "6 برابر سرمایه فوت",
+                },
+                {
+                    key: 7,
+                    value: "7 برابر سرمایه فوت",
+                },
+                {
+                    key: 8,
+                    value: "8 برابر سرمایه فوت",
+                },
+                {
+                    key: 9,
+                    value: "9 برابر سرمایه فوت",
+                },
+                {
+                    key: 10,
+                    value: "10 برابر سرمایه فوت",
+                },
+                {
+                    key: 11,
+                    value: "11 برابر سرمایه فوت",
+                },
+                {
+                    key: 12,
+                    value: "12 برابر سرمایه فوت",
+                },
+                {
+                    key: 13,
+                    value: "13 برابر سرمایه فوت",
+                },
+                {
+                    key: 14,
+                    value: "14 برابر سرمایه فوت",
+                },
+                {
+                    key: 15,
+                    value: "15 برابر سرمایه فوت",
+                },
+                {
+                    key: 16,
+                    value: "16 برابر سرمایه فوت",
+                },
+                {
+                    key: 17,
+                    value: "17 برابر سرمایه فوت",
+                },
+                {
+                    key: 18,
+                    value: "18 برابر سرمایه فوت",
+                },
+                {
+                    key: 19,
+                    value: "19 برابر سرمایه فوت",
+                },
+                {
+                    key: 20,
+                    value: "20 برابر سرمایه فوت",
+                },
+                {
+                    key: 21,
+                    value: "21 برابر سرمایه فوت",
+                },
+                {
+                    key: 22,
+                    value: "22 برابر سرمایه فوت",
+                },
+                {
+                    key: 23,
+                    value: "23 برابر سرمایه فوت",
+                },
+                {
+                    key: 24,
+                    value: "24 برابر سرمایه فوت",
+                },
+                {
+                    key: 25,
+                    value: "25 برابر سرمایه فوت",
+                },
+            ],
+        },
+        {
+            id: 13,
+            type: "select",
+            label: "افزایش سالانه سرمایه",
+            name: "capital_increase",
+            errorMessage: ". ابتدا افزایش سالانه حق بیمه را انتخاب نمایید !!",
+            required: true,
+            options: capitalIncreases,
+        },
+        {
+            id: 14,
+            type: "select",
+            label: "فوت بر اثر حادثه",
+            name: "death_capital_incident_ratio",
+            defaultValue: "مایل به دریافت نیستم",
+            options: capitalIncidents,
+        },
+        {
+            id: 15,
+            type: "select",
+            label: "نقص عضو و از کارافتادگی",
+            name: "maim_ratio",
+            defaultValue: "مایل به دریافت نیستم",
+            options: capitalIncidents,
+        },
+        {
+            id: 16,
+            type: "select",
+            label: "هزینه پزشکی ناشی از حادثه",
+            name: "has_medical_cost",
+            defaultValue: "خیر",
+            options: [
+                {
+                    key: 1,
+                    value: "بله",
+                },
+            ],
+        },
+        {
+            id: 17,
+            type: "select",
+            label: "بسته تکمیلی خطرات اضافی",
+            name: "additional_dangers",
+            defaultValue: "خیر",
+            options: [
+                {
+                    key: 1,
+                    value: "بله",
+                },
+            ],
+        },
+        {
+            id: 18,
+            type: "select",
+            label: "غرامت بستری",
+            name: "hospitalization",
+            defaultValue: "خیر",
+            options: [
+                {
+                    key: 1,
+                    value: "بله",
+                },
+            ],
+        },
+        {
+            id: 19,
+            type: "select",
+            label: "معافیت از پرداخت حق بیمه",
+            name: "exemption",
+            defaultValue: "خیر",
+            options: [
+                {
+                    key: 1,
+                    value: "بله",
+                },
+            ],
+        },
+        {
+            id: 20,
+            type: "select",
+            label: "امراض خاص",
+            name: "special_diseases_ratio",
+            defaultValue: "مایل به دریافت نیستم",
+            options: [
+                {
+                    key: 1,
+                    value: "1 برابر سرمایه فوت",
+                },
+                {
+                    key: 2,
+                    value: "2 برابر سرمایه فوت",
+                },
+            ],
         },
         /*
         ,{
@@ -226,6 +502,15 @@ function LifeCompare() {
                 break;
             case "first_job_level":
                 handleFirstJobLevel(e);
+                break;
+            case "annual_payment_increase":
+                handleAnnualPaymentIncrease(e);
+                break;
+            case "death_capital_incident_ratio":
+                handleDeathCapitalIncidentRatio(e);
+                break;
+            case "has_medical_cost":
+                handleHasMedicalCost(e);
                 break;
             default:
                 break;
@@ -320,6 +605,17 @@ function LifeCompare() {
         }
     };
 
+    const updateCapitalIncidents = (e) => {
+        const array = [];
+        for (let i = 1; i <= (age.current >= 15 ? 4 : 1); i++) {
+            array.push({
+                key: i,
+                value: i.toLocaleString() + " برابر سرمایه فوت",
+            });
+        }
+        setCapitalIncidents(array);
+    };
+
     const handleInsuranceTarget = (e) => {
         setErrors({ ...errors, birth_year: "" });
         if (e.target.value == "خودم") {
@@ -338,6 +634,7 @@ function LifeCompare() {
     const handleBirth = (e) => {
         setErrors({ ...errors, [e.target.name]: "" });
         updateAge(e);
+        updateCapitalIncidents(e);
         if (age.current > 64) {
             setValues({ ...values, [e.target.name]: "" });
             setErrors({
@@ -345,6 +642,7 @@ function LifeCompare() {
                 [e.target.name]: ". حداکثر سن 64 سال است !!",
             });
             setDurations([]);
+            setCapitalIncidents([]);
         } else if (age.current < 18) {
             if (values["insurance_target"] == "خودم") {
                 setValues({ ...values, [e.target.name]: "" });
@@ -354,6 +652,7 @@ function LifeCompare() {
                         ". سن شما کمتر از 18 سال است. نمی توانید خود را بیمه کنید !!",
                 });
                 setDurations([]);
+                setCapitalIncidents([]);
             }
         }
     };
@@ -439,6 +738,65 @@ function LifeCompare() {
         setJobResults([]);
     };
 
+    const handleAnnualPaymentIncrease = (e) => {
+        const array = [];
+        if (e.target.value)
+            for (let i = 0; i <= e.target.value / 5; i++) {
+                array.push({
+                    key: i * 5,
+                    value: (i * 5).toLocaleString() + " %",
+                });
+            }
+        setCapitalIncreases(array);
+    };
+
+    const handleDeathCapitalIncidentRatio = (e) => {
+        if (e.target.value) {
+            setDisableds({
+                ...disableds,
+                maim_ratio: false,
+                has_medical_cost: false,
+            });
+        } else {
+            setDisableds({
+                ...disableds,
+                maim_ratio: true,
+                has_medical_cost: true,
+                additional_dangers: true,
+                hospitalization: true,
+            });
+            setValues({
+                ...values,
+                maim_ratio: "",
+                has_medical_cost: "",
+                additional_dangers: "",
+                hospitalization: "",
+            });
+        }
+    };
+
+    const handleHasMedicalCost = (e) => {
+        if (e.target.value) {
+            setDisableds({
+                ...disableds,
+                additional_dangers: false,
+                hospitalization: false,
+            });
+        } else {
+            setDisableds({
+                ...disableds,
+                additional_dangers: true,
+                hospitalization: true,
+            });
+            setValues({
+                ...values,
+                has_medical_cost: "",
+                additional_dangers: "",
+                hospitalization: "",
+            });
+        }
+    };
+
     return (
         <div className="life-compare">
             <form onSubmit={handleSubmit} className="life-compare-form">
@@ -449,6 +807,7 @@ function LifeCompare() {
                         {...input}
                         value={values[input.name]}
                         error={errors[input.name]}
+                        disabled={disableds[input.name]}
                         onChange={onChange}
                         onClick={
                             input.name == "first_job_level"
